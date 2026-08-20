@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Principal Dashboard{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"></span> EduAI Platform</div>
+    <nav>
+      <a href="{{ url_for('principal.dashboard') }}" class="active">Overview</a>
+    </nav>
+    <div class="who">
+      <strong>{{ principal.full_name }}</strong>
+      Principal ID: {{ principal.principal_id }}
+      <div class="logout"><a href="{{ url_for('auth.logout') }}">Log out</a></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Principal dashboard</div>
+        <h1>Welcome, {{ principal.full_name }}</h1>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label">Students on roster</div>
+        <div class="value">{{ students|length }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">AI exams created</div>
+        <div class="value gold">{{ exams|length }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Mark today's register</h2>
+      {% if students %}
+      <form method="POST" action="{{ url_for('principal.mark_attendance') }}">
+        <div class="field" style="max-width:220px;">
+          <label>Date</label>
+          <input type="date" name="attendance_date" value="{{ today }}" required>
+        </div>
+        <div class="ledger" style="margin-bottom:1rem;">
+          {% for s in students %}
+          <label class="roster-check">
+            <span>{{ s.full_name }} <span class="muted small">({{ s.student_id }}{% if s.class_name %} · {{ s.class_name }}{% endif %})</span></span>
+            <span>
+              <input type="checkbox" name="present_student_ids" value="{{ s.id }}" checked> present
+              <input type="hidden" name="all_student_ids" value="{{ s.id }}">
+            </span>
+          </label>
+          {% endfor %}
+        </div>
+        <button class="btn btn-gold" type="submit">Save register</button>
+      </form>
+      {% else %}
+      <p class="empty">No students registered under your institution yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>Create an AI exam</h2>
+      <form method="POST" action="{{ url_for('principal.create_exam') }}">
+        <div class="field">
+          <label>Subject</label>
+          <input type="text" name="subject" required placeholder="e.g. Mathematics">
+        </div>
+        <div class="field">
+          <label>Topic</label>
+          <input type="text" name="topic" placeholder="e.g. Quadratic equations">
+        </div>
+        <div class="field">
+          <label>Difficulty</label>
+          <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Number of questions</label>
+          <input type="number" name="num_questions" value="5" min="3" max="20">
+        </div>
+        <button class="btn btn-gold" type="submit">Generate exam with AI</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Exams created</h2>
+      {% if exams %}
+      <table>
+        <tr><th>Subject</th><th>Topic</th><th>Difficulty</th><th>Created</th></tr>
+        {% for e in exams %}
+        <tr><td>{{ e.subject }}</td><td>{{ e.topic or '—' }}</td><td>{{ e.difficulty }}</td><td>{{ e.created_at.strftime('%d %b %Y') }}</td></tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">No exams created yet.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+
+<button class="bot-toggle" id="bot-toggle" title="Ask the assistant">💬</button>
+<div class="bot-panel" id="bot-panel">
+  <div class="chat-log" id="bot-log"></div>
+  <form class="chat-input-row" id="bot-form">
+    <input id="bot-input" type="text" placeholder="Ask about your school…" autocomplete="off">
+    <button class="btn btn-gold" type="submit">Send</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.CHATBOT_URL = "{{ url_for('principal.chatbot') }}";</script>
+{% endblock %}

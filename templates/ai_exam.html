@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.subject }} Exam{% endblock %}
+{% block content %}
+<div class="auth-wrap" style="max-width:640px;">
+  <div class="eyebrow">AI exam</div>
+  <h1>{{ exam.subject }}{% if exam.topic %} — {{ exam.topic }}{% endif %}</h1>
+  <p class="auth-sub">{{ questions|length }} questions · {{ exam.difficulty }} difficulty. Graded instantly by AI.</p>
+
+  <form method="POST" action="{{ url_for('student.submit_exam', exam_id=exam.id) }}">
+    {% for q in questions %}
+    {% set qidx = loop.index0 %}
+    <div class="exam-q">
+      <div class="qnum">Question {{ loop.index }}</div>
+      <p><strong>{{ q.question }}</strong></p>
+      {% for opt in q.options %}
+      <label class="exam-opt">
+        <input type="radio" name="q{{ qidx }}" value="{{ opt }}" required>
+        {{ opt }}
+      </label>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <button class="btn btn-gold btn-block" type="submit">Submit for AI grading</button>
+  </form>
+</div>
+{% endblock %}

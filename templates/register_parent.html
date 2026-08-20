@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Register Parent{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1>Register as parent</h1>
+  <p class="auth-sub">Link your account to your child using their Student ID.</p>
+  <form method="POST">
+    <div class="field">
+      <label>Your child's Student ID</label>
+      <input type="text" name="child_student_id" required placeholder="e.g. STU1001">
+    </div>
+    <div class="field">
+      <label>Your full name</label>
+      <input type="text" name="full_name" required>
+    </div>
+    <div class="field">
+      <label>Choose a Parent login ID</label>
+      <input type="text" name="parent_login_id" required placeholder="e.g. PAR1001">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required minlength="6">
+    </div>
+    <button class="btn btn-gold btn-block" type="submit">Register</button>
+  </form>
+  <div class="auth-links">
+    Already registered? <a href="{{ url_for('auth.login') }}">Log in</a><br>
+    <a href="{{ url_for('auth.index') }}">← Back</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Institution Dashboard{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"></span> EduAI Platform</div>
+    <nav>
+      <a href="{{ url_for('institution.dashboard') }}" class="active">Overview</a>
+    </nav>
+    <div class="who">
+      <strong>{{ institution.institution_name }}</strong>
+      ID: {{ institution.institution_code }}
+      <div class="logout"><a href="{{ url_for('auth.logout') }}">Log out</a></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Institution overview</div>
+        <h1>{{ institution.institution_name }}</h1>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label">Principals registered</div>
+        <div class="value">{{ total_principals }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Students registered</div>
+        <div class="value gold">{{ total_students }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Institution ID</div>
+        <div class="value" style="font-size:1.1rem;">{{ institution.institution_code }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Principals</h2>
+      {% if principals %}
+      <table>
+        <tr><th>Name</th><th>Principal ID</th><th>Joined</th></tr>
+        {% for p in principals %}
+        <tr><td>{{ p.full_name }}</td><td>{{ p.principal_id }}</td><td>{{ p.created_at.strftime('%d %b %Y') }}</td></tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">No principals have registered under this Institution ID yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>Students</h2>
+      {% if students %}
+      <table>
+        <tr><th>Name</th><th>Student ID</th><th>Class</th></tr>
+        {% for s in students %}
+        <tr><td>{{ s.full_name }}</td><td>{{ s.student_id }}</td><td>{{ s.class_name or '—' }}</td></tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">No students have registered yet.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+
+<button class="bot-toggle" id="bot-toggle" title="Ask the assistant">💬</button>
+<div class="bot-panel" id="bot-panel">
+  <div class="chat-log" id="bot-log"></div>
+  <form class="chat-input-row" id="bot-form">
+    <input id="bot-input" type="text" placeholder="Ask about your institution…" autocomplete="off">
+    <button class="btn btn-gold" type="submit">Send</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.CHATBOT_URL = "{{ url_for('institution.chatbot') }}";</script>
+{% endblock %}

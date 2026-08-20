@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1>Log in</h1>
+  <p class="auth-sub">Choose your role, then sign in with your ID and password.</p>
+
+  <form method="POST" id="login-form">
+    <div class="role-tabs" id="role-tabs">
+      <div class="role-tab active" data-role="institution">Institution</div>
+      <div class="role-tab" data-role="principal">Principal</div>
+      <div class="role-tab" data-role="student">Student</div>
+      <div class="role-tab" data-role="parent">Parent</div>
+    </div>
+    <input type="hidden" name="role" id="role-input" value="institution">
+
+    <div class="field">
+      <label id="login-id-label">Institution ID</label>
+      <input type="text" name="login_id" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <button class="btn btn-gold btn-block" type="submit">Log in</button>
+  </form>
+
+  <div class="auth-links">
+    New here? Register as
+    <a href="{{ url_for('auth.register_institution') }}">institution</a>,
+    <a href="{{ url_for('auth.register_principal') }}">principal</a>,
+    <a href="{{ url_for('auth.register_student') }}">student</a> or
+    <a href="{{ url_for('auth.register_parent') }}">parent</a>.<br>
+    <a href="{{ url_for('auth.index') }}">← Back</a>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const labels = {
+    institution: "Institution ID",
+    principal: "Principal ID",
+    student: "Student ID",
+    parent: "Parent ID",
+  };
+  document.querySelectorAll(".role-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".role-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const role = tab.dataset.role;
+      document.getElementById("role-input").value = role;
+      document.getElementById("login-id-label").textContent = labels[role];
+    });
+  });
+</script>
+{% endblock %}

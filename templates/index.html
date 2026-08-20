@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}EduAI Platform — AI-powered school management{% endblock %}
+{% block content %}
+<div class="landing">
+  <div class="landing-nav">
+    <div class="brand"><span class="mark"></span> EduAI Platform</div>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-gold">Log in</a>
+  </div>
+
+  <div class="landing-hero">
+    <div class="eyebrow">Register · Teach · Assess · Track</div>
+    <h1>One register for the whole school — admin, principal, student and parent, in step.</h1>
+    <p class="sub">Institutions register once. Principals mark the daily register and set AI exams. Students learn with an AI teacher and sit AI-graded tests. Parents watch attendance and results update in real time.</p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="num">01</div>
+        <h3>College / School</h3>
+        <p>Register your institution and get an Institution ID for staff and students to join under.</p>
+        <a class="btn-mini" href="{{ url_for('auth.register_institution') }}">Register institution →</a>
+      </div>
+      <div class="role-card">
+        <div class="num">02</div>
+        <h3>Principal</h3>
+        <p>Mark daily attendance, review the roster, and set AI-generated exams for your students.</p>
+        <a class="btn-mini" href="{{ url_for('auth.register_principal') }}">Register as principal →</a>
+      </div>
+      <div class="role-card">
+        <div class="num">03</div>
+        <h3>Student</h3>
+        <p>Learn with an AI teacher on a live whiteboard, take AI exams, and track your own attendance.</p>
+        <a class="btn-mini" href="{{ url_for('auth.register_student') }}">Register as student →</a>
+      </div>
+      <div class="role-card">
+        <div class="num">04</div>
+        <h3>Parent</h3>
+        <p>Link to your child's Student ID to follow their attendance and test performance.</p>
+        <a class="btn-mini" href="{{ url_for('auth.register_parent') }}">Register as parent →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-footer">Built with Flask · MySQL · OpenAI</div>
+</div>
+{% endblock %}

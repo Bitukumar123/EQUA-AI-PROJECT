@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Register Institution{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1>Register your institution</h1>
+  <p class="auth-sub">Creates the College/School account. You'll get an Institution ID that principals and students use to join.</p>
+  <form method="POST">
+    <div class="field">
+      <label>Institution name</label>
+      <input type="text" name="institution_name" required placeholder="e.g. Green Valley College">
+    </div>
+    <div class="field">
+      <label>Choose an Institution ID</label>
+      <input type="text" name="institution_code" required placeholder="e.g. GVC2026">
+    </div>
+    <div class="field">
+      <label>Address (optional)</label>
+      <input type="text" name="address" placeholder="City, State">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required minlength="6">
+    </div>
+    <button class="btn btn-gold btn-block" type="submit">Register institution</button>
+  </form>
+  <div class="auth-links">
+    Already registered? <a href="{{ url_for('auth.login') }}">Log in</a><br>
+    <a href="{{ url_for('auth.index') }}">← Back</a>
+  </div>
+</div>
+{% endblock %}

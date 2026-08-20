@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Register Student{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1>Register as student</h1>
+  <p class="auth-sub">You'll need the Institution ID from your college/school.</p>
+  <form method="POST">
+    <div class="field">
+      <label>Institution ID</label>
+      <input type="text" name="institution_code" required placeholder="e.g. GVC2026">
+    </div>
+    <div class="field">
+      <label>Full name</label>
+      <input type="text" name="full_name" required>
+    </div>
+    <div class="field">
+      <label>Class / Grade</label>
+      <input type="text" name="class_name" placeholder="e.g. Grade 10 - B">
+    </div>
+    <div class="field">
+      <label>Choose a Student ID</label>
+      <input type="text" name="student_id" required placeholder="e.g. STU1001">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required minlength="6">
+    </div>
+    <button class="btn btn-gold btn-block" type="submit">Register</button>
+  </form>
+  <div class="auth-links">
+    Already registered? <a href="{{ url_for('auth.login') }}">Log in</a><br>
+    <a href="{{ url_for('auth.index') }}">← Back</a>
+  </div>
+</div>
+{% endblock %}

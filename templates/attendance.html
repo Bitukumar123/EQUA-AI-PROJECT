@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Mark Attendance</h2>
+
+  {% if saved %}
+    <div class="alert alert-success">Attendance saved for {{ selected_date }}.</div>
+  {% endif %}
+
+  <form method="get" action="{{ url_for('institution.attendance') }}" class="mb-3 d-flex align-items-center gap-2">
+    <label for="date" class="me-2">Date:</label>
+    <input type="date" id="date" name="date" value="{{ selected_date }}"
+           onchange="this.form.submit()" class="form-control" style="max-width: 200px;">
+  </form>
+
+  {% if students %}
+  <form method="post" action="{{ url_for('institution.save_attendance') }}">
+    <input type="hidden" name="attendance_date" value="{{ selected_date }}">
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Present</th>
+          <th>Absent</th>
+          <th>Late</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        {% set current_status = existing_map.get(student.id, 'present') %}
+        <tr>
+          <td>{{ student.student_id }}</td>
+          <td>{{ student.full_name }}</td>
+          <td>{{ student.class_name or '-' }}</td>
+          <td>
+            <input type="radio" name="status_{{ student.id }}" value="present"
+                   {% if current_status == 'present' %}checked{% endif %}>
+          </td>
+          <td>
+            <input type="radio" name="status_{{ student.id }}" value="absent"
+                   {% if current_status == 'absent' %}checked{% endif %}>
+          </td>
+          <td>
+            <input type="radio" name="status_{{ student.id }}" value="late"
+                   {% if current_status == 'late' %}checked{% endif %}>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Save Attendance</button>
+  </form>
+  {% else %}
+    <p>No students found for your institution yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

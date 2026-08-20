@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"></span> EduAI Platform</div>
+    <nav>
+      <a href="{{ url_for('student.dashboard') }}" class="active">Overview</a>
+      <a href="{{ url_for('student.ai_teacher') }}">AI Teacher</a>
+    </nav>
+    <div class="who">
+      <strong>{{ student.full_name }}</strong>
+      {{ student.student_id }}{% if student.class_name %} · {{ student.class_name }}{% endif %}
+      <div class="logout"><a href="{{ url_for('auth.logout') }}">Log out</a></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Student dashboard</div>
+        <h1>Welcome, {{ student.full_name }}</h1>
+      </div>
+      <a class="btn btn-gold" href="{{ url_for('student.ai_teacher') }}">Open AI Teacher →</a>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label">Attendance (last 30 marked)</div>
+        <div class="value green">{{ attendance_pct }}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Exams taken</div>
+        <div class="value">{{ results|length }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Exams available</div>
+        <div class="value gold">{{ exams_available|length }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>My attendance register</h2>
+      {% if attendance_rows %}
+      <div class="ledger">
+        {% for a in attendance_rows %}
+        <div class="ledger-row">
+          <span class="date">{{ a.attendance_date.strftime('%d %b %Y') }}</span>
+          <span class="ledger-mark {{ a.status }}">{{ '✓' if a.status=='present' else ('L' if a.status=='late' else '✕') }}</span>
+          <span class="badge badge-{{ a.status }}">{{ a.status }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">No attendance has been marked yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>Exams available</h2>
+      {% if exams_available %}
+      <table>
+        <tr><th>Subject</th><th>Topic</th><th>Difficulty</th><th></th></tr>
+        {% for e in exams_available %}
+        <tr>
+          <td>{{ e.subject }}</td><td>{{ e.topic or '—' }}</td><td>{{ e.difficulty }}</td>
+          <td><a class="btn btn-gold" style="padding:.4rem .8rem;font-size:.82rem;" href="{{ url_for('student.take_exam', exam_id=e.id) }}">Take exam</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">No exams have been set yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>My results</h2>
+      {% if results %}
+      <table>
+        <tr><th>Subject</th><th>Topic</th><th>Score</th><th>Taken</th><th>AI feedback</th></tr>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.subject }}</td><td>{{ r.topic or '—' }}</td>
+          <td><strong>{{ r.score }}/{{ r.max_score }}</strong></td>
+          <td>{{ r.taken_at.strftime('%d %b %Y') }}</td>
+          <td class="muted small">{{ r.ai_feedback }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">You haven't taken any exams yet.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+
+<button class="bot-toggle" id="bot-toggle" title="Ask the assistant">💬</button>
+<div class="bot-panel" id="bot-panel">
+  <div class="chat-log" id="bot-log"></div>
+  <form class="chat-input-row" id="bot-form">
+    <input id="bot-input" type="text" placeholder="Ask about your grades, attendance…" autocomplete="off">
+    <button class="btn btn-gold" type="submit">Send</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.CHATBOT_URL = "{{ url_for('student.chatbot') }}";</script>
+{% endblock %}
